@@ -7,16 +7,16 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    int n = 10;
+    int n = 12;
     QVector <double> x(n),y(n),t(n);
-    aircraftModel *plane = new aircraftModel (5000,2000,1,150,100);
+    aircraftModel *plane = new aircraftModel (5000,2000,10,150,100);
     for (int i =0 ;i<n; i++)
     {
         x[i] = plane->getX();
         y[i] = plane->getY();
         qDebug() << x[i] <<y[i] << "/" <<  plane->getVX()<< plane->getVY();
         t[i] = i;
-        plane->update(36.0);
+        plane->update(3.0);
     }
     ui->plotX->addGraph();
     ui->plotX->graph(0)->setData(t,x);
