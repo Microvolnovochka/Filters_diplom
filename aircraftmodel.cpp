@@ -1,5 +1,7 @@
 #include "aircraftmodel.h"
 
+#include <time.h>
+
 aircraftModel::aircraftModel(double _x,double _y, double _dt, double _vX, double _vY, double _aX, double _aY)
 {
     this->x = _x;
@@ -9,6 +11,7 @@ aircraftModel::aircraftModel(double _x,double _y, double _dt, double _vX, double
     this->dt = _dt;
     this->aX = _aX;
     this->aY = _aY;
+    srand (time(NULL));
 }
 
 void aircraftModel::update()
@@ -49,12 +52,12 @@ double aircraftModel::getVY()
 
 double aircraftModel::getNX()
 {
-    return this->x;
+    return this->x + rand()%300-150;
 }
 
 double aircraftModel::getNY()
 {
-    return this->x;
+    return this->y + rand()%300-150;
 }
 
 double aircraftModel::getNVX()
