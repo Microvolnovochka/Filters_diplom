@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     abfilter.cpp \
     aircraftmodel.cpp \
+    kalmanfilter.cpp \
     main.cpp \
     mainwindow.cpp \
     matrix.cpp \
@@ -26,6 +27,7 @@ SOURCES += \
 HEADERS += \
     abfilter.h \
     aircraftmodel.h \
+    kalmanfilter.h \
     mainwindow.h \
     matrix.h \
     qcustomplot/qcustomplot.h

@@ -3,58 +3,60 @@
 AB_Filter::AB_Filter(double _x,double _y, double _dt,double _vX,double _vY,double _aX, double _aY)
 {
     this->x = _x;
+    this->x2 = _x;
     this->y = _y;
+    this->y2 = _y;
     this->dt = _dt;
     this->vX = _vX;
     this->vY = _vY;
+    this->vX2 = _vX;
+    this->vY2 = _vY;
     this->aX = _aX;
     this->aY = _aY;
-    this->zX = _x;
-    this->zY = _y;
-}
-
-void AB_Filter::setZXZY (double _zX,double _zY)
-{
-    this->zX = _zX;
-    this->zY = _zY;
+    this->aX2 = _aX;
+    this->aY2 = _aY;
 }
 
 double AB_Filter::getX()
 {
-    return this->x;
+    return this->x2;
 }
 
 double AB_Filter::getY()
 {
-    return this->y;
+    return this->y2;
 }
 
-void AB_Filter::update(double alpha, double beta, bool predict)
+void AB_Filter::setMXMY(double _mX, double _mY)
 {
-    this->vX += beta*((this->zX-this->x)/this->dt);
-    this->vY += beta*((this->zY-this->y)/this->dt);
-    this->x += alpha*(this->zX-this->x);
-    this->y += alpha*(this->zY-this->y);
-    if (predict)
-    {
-        this->x += this->vX*this->dt;
-        this->y += this->vY*this->dt;
-    }
+    this->mX = _mX;
+    this->mY = _mY;
 }
 
-void AB_Filter::update(double alpha, double beta,double gamma, bool predict)
+void AB_Filter::update(double alpha, double beta)
 {
-    this->aX += gamma*((this->zX-this->x)/(0.5*this->dt*this->dt));
-    this->aY += gamma*((this->zY-this->y)/(0.5*this->dt*this->dt));
-    this->vX += beta*((this->zX-this->x)/this->dt);
-    this->vY += beta*((this->zY-this->y)/this->dt);
-    this->x += alpha*(this->zX-this->x);
-    this->y += alpha*(this->zY-this->y);
-    if (predict)
-    {
-        this->x += this->vX*this->dt + this->aX*((this->dt*this->dt)/2);
-        this->y += this->vY*this->dt + this->aY*((this->dt*this->dt)/2);
-        this->vX += this->aX*this->dt;
-        this->vY += this->aY*this->dt;
-    }
+    x = x2 + vX2 * dt;
+    y = y2 + vY2 * dt;
+    vX = vX2;
+    vY = vY2;
+    x2 = x + alpha*(mX-x);
+    y2 = y + alpha*(mY-y);
+    vX2 = vX + beta*(mX-x)/dt;
+    vY2 = vY + beta*(mY-y)/dt;
+}
+
+void AB_Filter::update(double alpha, double beta,double gamma)
+{
+    x = x2 + vX2 * dt + (aX2*dt*dt)/2;
+    y = y2 + vY2 * dt + (aY2*dt*dt)/2;
+    vX = vX2 + aX2 * dt;
+    vY = vY2 + aY2 * dt;
+    aX = aX2;
+    aY = aY2;
+    x2 = x + alpha*(mX-x);
+    y2 = y + alpha*(mY-y);
+    vX2 = vX + beta*(mX-x)/dt;
+    vY2 = vY + beta*(mY-y)/dt;
+    aX2 = aX + (2*gamma/(dt*dt))*(mX-x);
+    aY2 = aY + (2*gamma/(dt*dt))*(mY-y);
 }
