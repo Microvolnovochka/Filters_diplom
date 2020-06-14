@@ -30,19 +30,6 @@ void free_matrix(Matrix m) {
   free(m.data);
 }
 
-void set_matrix(Matrix m, ...) {
-  va_list ap;
-  va_start(ap, m);
-
-  for (int i = 0; i < m.rows; ++i) {
-    for (int j = 0; j < m.cols; ++j) {
-      m.data[i][j] = va_arg(ap, double);
-    }
-  }
-
-  va_end(ap);
-}
-
 void set_identity_matrix(Matrix m) {
   assert(m.rows == m.cols);
   for (int i = 0; i < m.rows; ++i) {

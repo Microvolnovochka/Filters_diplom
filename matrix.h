@@ -16,8 +16,6 @@ Matrix alloc_matrix(int rows, int cols);
 
 void free_matrix(Matrix m);
 
-void set_matrix(Matrix m, ...);
-
 void set_identity_matrix(Matrix m);
 
 void copy_matrix(Matrix source, Matrix destination);

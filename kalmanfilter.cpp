@@ -13,6 +13,10 @@ KalmanFilter::KalmanFilter(int state_dimension,
                         state_dimension);
   observation_noise_covariance = alloc_matrix(observation_dimension,
                         observation_dimension);
+  B = alloc_matrix(state_dimension,
+                   2);
+  u = alloc_matrix(2,
+                   1);
 
   observation = alloc_matrix(observation_dimension, 1);
 
@@ -36,13 +40,21 @@ KalmanFilter::KalmanFilter(int state_dimension,
                     observation_dimension);
   big_square_scratch = alloc_matrix(state_dimension,
                       state_dimension);
+  B_u = alloc_matrix(state_dimension,
+                     1);
 }
 
-void KalmanFilter::alloc_filter(double _x,double _y,double dt,double _vX,double _vY,double R)
+void KalmanFilter::alloc_filter(double _x,double _y,double dt,double _vX,double _vY,double R, double _aX, double _aY)
 {
     set_identity_matrix(state_transition);
     state_transition.data[0][1] = dt;
     state_transition.data[2][3] = dt;
+    B.data[0][0] = (pow(dt,2)/2);
+    B.data[1][0] = dt;
+    B.data[2][1] = (pow(dt,2)/2);
+    B.data[3][1] = dt;
+    u.data[0][0] = _aX;
+    u.data[1][0] = _aY;
     observation_model.data[0][0] = 1;
     observation_model.data[1][2] = 1;
     observation_noise_covariance.data[0][0] = pow(R,1/2);
@@ -76,6 +88,8 @@ void KalmanFilter::free_filter()
   free_matrix(observation_model);
   free_matrix(process_noise_covariance);
   free_matrix(observation_noise_covariance);
+  free_matrix(B);
+  free_matrix(u);
 
   free_matrix(observation);
 
@@ -91,6 +105,7 @@ void KalmanFilter::free_filter()
   free_matrix(vertical_scratch);
   free_matrix(small_square_scratch);
   free_matrix(big_square_scratch);
+  free_matrix(B_u);
 }
 
 void KalmanFilter::update()
@@ -101,9 +116,12 @@ void KalmanFilter::update()
 
 void KalmanFilter::predict()
 {
-
+    multiply_matrix(B,u,
+                    B_u);
   multiply_matrix(state_transition, state_estimate,
          predicted_state);
+  add_matrix(predicted_state,B_u,
+             predicted_state);
 
   multiply_matrix(state_transition, estimate_covariance,
           big_square_scratch);

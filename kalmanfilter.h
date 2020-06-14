@@ -7,22 +7,10 @@ class  KalmanFilter
 public:
     KalmanFilter(int state_dimension,
                  int observation_dimension);
-    void alloc_filter(double _x,double _y,double dt,double _vX,double _vY,double R);
+    void alloc_filter(double _x,double _y,double dt,double _vX,double _vY,double R, double _aX = 0, double _aY = 0);
 
     void free_filter();
 
-    /* Runs one timestep of prediction + estimation.
-       Before each time step of running this, set f.observation to be the
-       next time step's observation.
-       Before the first step, define the model by setting:
-       f.state_transition
-       f.observation_model
-       f.process_noise_covariance
-       f.observation_noise_covariance
-       It is also advisable to initialize with reasonable guesses for
-       f.state_estimate
-       f.estimate_covariance
-    */
     void update();
 
     /* Just the prediction phase of update. */
@@ -36,12 +24,6 @@ public:
 
     double getY();
 private:
-  /* k */
-  int timestep;
-
-  /* These parameters define the size of the matrices. */
-  int state_dimension, observation_dimension;
-
   /* This group of matrices must be specified by the user. */
   /* F_k */
   Matrix state_transition;
@@ -51,6 +33,11 @@ private:
   Matrix process_noise_covariance;
   /* R_k */
   Matrix observation_noise_covariance;
+  /*B_k*/
+  Matrix B;
+  /*u_k*/
+  Matrix u;
+
 
   /* The observation is modified by the user before every time step. */
   /* z_k */
@@ -74,9 +61,10 @@ private:
   /* P_k|k */
   Matrix estimate_covariance;
 
-  /* This group is used for meaningless intermediate calculations */
+  /* This group is used for intermediate calculations */
   Matrix vertical_scratch;
   Matrix small_square_scratch;
+  Matrix B_u;
   Matrix big_square_scratch;
 
 };

@@ -34,12 +34,22 @@
      </rect>
     </property>
    </widget>
-   <widget class="QCustomPlot" name="plotXY" native="true">
+   <widget class="QCustomPlot" name="plotEX" native="true">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>340</y>
+      <x>20</x>
+      <y>300</y>
       <width>301</width>
+      <height>201</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCustomPlot" name="plotEY" native="true">
+    <property name="geometry">
+     <rect>
+      <x>399</x>
+      <y>309</y>
+      <width>311</width>
       <height>191</height>
      </rect>
     </property>
